@@ -111,15 +111,21 @@
 
 
   /* -----------------------------------------------
-     BACK-TO-TOP BUTTON
+     BACK-TO-TOP BUTTON & FLOATING CALL CTA
   ----------------------------------------------- */
-  const backToTop = document.getElementById('backToTop');
+  const backToTop    = document.getElementById('backToTop');
+  const floatingCall = document.getElementById('floatingCall');
 
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 400) {
-      backToTop.removeAttribute('hidden');
-    } else {
-      backToTop.setAttribute('hidden', '');
+    const scrolled = window.scrollY > 400;
+
+    if (backToTop) {
+      scrolled ? backToTop.removeAttribute('hidden') : backToTop.setAttribute('hidden', '');
+    }
+
+    // Floating phone CTA: einblenden nach Hero (ca. 600px)
+    if (floatingCall) {
+      floatingCall.classList.toggle('visible', window.scrollY > 600);
     }
   }, { passive: true });
 
