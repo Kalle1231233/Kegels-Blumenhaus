@@ -94,7 +94,10 @@
     <div class="container">
       <a href="#hero" class="logo" aria-label="Kegels Blumenhaus – zur Startseite">
         <span class="logo-flower" aria-hidden="true">
-          <img src="images/logo-bouquet.jpg" alt="" class="logo-img">
+          <picture>
+            <source type="image/webp" srcset="images/logo-bouquet.webp">
+            <img src="images/logo-bouquet.jpg" alt="" class="logo-img" width="200" height="200">
+          </picture>
         </span>
         <span class="logo-text">
           <span class="logo-main">Kegels Blumenhaus</span>
@@ -167,15 +170,35 @@
         </div>
         <div class="hero-visual">
           <div class="hero-photo-frame">
-            <img
-              src="images/hero-bouquet.jpg"
-              alt="Frischer Brautstrauß mit rosa Rosen, weißen Tulpen und Eukalyptus – Kegels Blumenhaus Glienicke/Nordbahn"
-              class="hero-photo"
-              width="700"
-              height="933"
-              loading="eager"
-              fetchpriority="high"
-            >
+            <picture>
+              <source
+                type="image/webp"
+                srcset="images/hero-bouquet-480.webp 480w,
+                        images/hero-bouquet-900.webp 900w,
+                        images/hero-bouquet-1400.webp 1400w"
+                sizes="(max-width: 767px) calc(100vw - 40px),
+                       (max-width: 1023px) 48vw,
+                       420px"
+              >
+              <source
+                type="image/jpeg"
+                srcset="images/hero-bouquet-480.jpg 480w,
+                        images/hero-bouquet-900.jpg 900w,
+                        images/hero-bouquet-1400.jpg 1400w"
+                sizes="(max-width: 767px) calc(100vw - 40px),
+                       (max-width: 1023px) 48vw,
+                       420px"
+              >
+              <img
+                src="images/hero-bouquet-900.jpg"
+                alt="Frischer Brautstrauß mit rosa Rosen, weißen Tulpen und Eukalyptus – Kegels Blumenhaus Glienicke/Nordbahn"
+                class="hero-photo"
+                width="700"
+                height="933"
+                loading="eager"
+                fetchpriority="high"
+              >
+            </picture>
           </div>
           <div class="hero-photo-badge" aria-hidden="true">
             <div class="stars-row">★★★★★</div>
@@ -197,14 +220,28 @@
         <div class="about-grid">
           <div class="about-image fade-in">
             <div class="img-frame">
-              <img
-                src="images/about.jpg"
-                alt="Frische Rosen und Frühlingsblumen bei Kegels Blumenhaus in Glienicke/Nordbahn"
-                loading="lazy"
-                width="700"
-                height="525"
-                class="about-img"
-              >
+              <picture>
+                <source
+                  type="image/webp"
+                  srcset="images/about-480.webp 480w,
+                          images/about-900.webp 900w"
+                  sizes="(max-width: 899px) calc(100vw - 40px), 44vw"
+                >
+                <source
+                  type="image/jpeg"
+                  srcset="images/about-480.jpg 480w,
+                          images/about-900.jpg 900w"
+                  sizes="(max-width: 899px) calc(100vw - 40px), 44vw"
+                >
+                <img
+                  src="images/about-900.jpg"
+                  alt="Frische Rosen und Frühlingsblumen bei Kegels Blumenhaus in Glienicke/Nordbahn"
+                  loading="lazy"
+                  width="900"
+                  height="600"
+                  class="about-img"
+                >
+              </picture>
             </div>
             <div class="about-badge">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -454,27 +491,51 @@
         </div>
         <div class="gallery-grid">
           <div class="gallery-item gallery-item--large fade-in">
-            <img src="images/gallery-1.jpg" alt="Bunter Frühlingsstrauß mit frischen Blumen – Kegels Blumenhaus" loading="lazy" width="800" height="600">
+            <picture>
+              <source type="image/webp" srcset="images/gallery-1-480.webp 480w, images/gallery-1.webp 800w" sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 899px) 50vw, 680px">
+              <source type="image/jpeg" srcset="images/gallery-1-480.jpg 480w, images/gallery-1.jpg 800w"   sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 899px) 50vw, 680px">
+              <img src="images/gallery-1.jpg" alt="Bunter Frühlingsstrauß mit frischen Blumen – Kegels Blumenhaus" loading="lazy" width="800" height="600">
+            </picture>
             <div class="gallery-overlay"><span>Frühlingsstrauß</span></div>
           </div>
           <div class="gallery-item fade-in">
-            <img src="images/gallery-2.jpg" alt="Elegante rote Rosen aus unserem Sortiment" loading="lazy" width="600" height="600">
+            <picture>
+              <source type="image/webp" srcset="images/gallery-2-480.webp 480w, images/gallery-2.webp 800w" sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <source type="image/jpeg" srcset="images/gallery-2-480.jpg 480w, images/gallery-2.jpg 800w"   sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <img src="images/gallery-2.jpg" alt="Elegante rote Rosen aus unserem Sortiment" loading="lazy" width="800" height="800">
+            </picture>
             <div class="gallery-overlay"><span>Rosenvielfalt</span></div>
           </div>
           <div class="gallery-item fade-in">
-            <img src="images/gallery-3.jpg" alt="Weiße Hochzeitsblumen und Brautstrauß" loading="lazy" width="600" height="600">
+            <picture>
+              <source type="image/webp" srcset="images/gallery-3-480.webp 480w, images/gallery-3.webp 800w" sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <source type="image/jpeg" srcset="images/gallery-3-480.jpg 480w, images/gallery-3.jpg 800w"   sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <img src="images/gallery-3.jpg" alt="Weiße Hochzeitsblumen und Brautstrauß" loading="lazy" width="800" height="800">
+            </picture>
             <div class="gallery-overlay"><span>Hochzeitsfloristik</span></div>
           </div>
           <div class="gallery-item fade-in">
-            <img src="images/gallery-4.jpg" alt="Tischgesteck mit frischen Blumen für besondere Anlässe" loading="lazy" width="600" height="600">
+            <picture>
+              <source type="image/webp" srcset="images/gallery-4-480.webp 480w, images/gallery-4.webp 800w" sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <source type="image/jpeg" srcset="images/gallery-4-480.jpg 480w, images/gallery-4.jpg 800w"   sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <img src="images/gallery-4.jpg" alt="Tischgesteck mit frischen Blumen für besondere Anlässe" loading="lazy" width="800" height="800">
+            </picture>
             <div class="gallery-overlay"><span>Tischgesteck</span></div>
           </div>
           <div class="gallery-item fade-in">
-            <img src="images/gallery-5.jpg" alt="Herbstliches Blumenarrangement in warmen Farben" loading="lazy" width="600" height="800">
+            <picture>
+              <source type="image/webp" srcset="images/gallery-5-480.webp 480w, images/gallery-5.webp 800w" sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <source type="image/jpeg" srcset="images/gallery-5-480.jpg 480w, images/gallery-5.jpg 800w"   sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <img src="images/gallery-5.jpg" alt="Herbstliches Blumenarrangement in warmen Farben" loading="lazy" width="800" height="1000">
+            </picture>
             <div class="gallery-overlay"><span>Herbstfloristik</span></div>
           </div>
           <div class="gallery-item fade-in">
-            <img src="images/gallery-6.jpg" alt="Grüne Zimmerpflanzen und botanische Dekoration" loading="lazy" width="600" height="600">
+            <picture>
+              <source type="image/webp" srcset="images/gallery-6-480.webp 480w, images/gallery-6.webp 800w" sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <source type="image/jpeg" srcset="images/gallery-6-480.jpg 480w, images/gallery-6.jpg 800w"   sizes="(max-width: 599px) calc(50vw - 16px), (max-width: 899px) 50vw, 340px">
+              <img src="images/gallery-6.jpg" alt="Grüne Zimmerpflanzen und botanische Dekoration" loading="lazy" width="800" height="800">
+            </picture>
             <div class="gallery-overlay"><span>Pflanzen &amp; Deko</span></div>
           </div>
         </div>
@@ -825,7 +886,10 @@
         <div class="footer-brand">
           <a href="#hero" class="logo logo--light" aria-label="Kegels Blumenhaus – zur Startseite">
             <span class="logo-flower" aria-hidden="true">
-              <img src="images/logo-bouquet.jpg" alt="" class="logo-img">
+              <picture>
+                <source type="image/webp" srcset="images/logo-bouquet.webp">
+                <img src="images/logo-bouquet.jpg" alt="" class="logo-img" width="200" height="200">
+              </picture>
             </span>
             <span class="logo-text">
               <span class="logo-main">Kegels Blumenhaus</span>
