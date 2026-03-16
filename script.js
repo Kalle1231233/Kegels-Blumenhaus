@@ -1,202 +1,313 @@
-/* ============================================================
-   Kegels Blumenhaus – JavaScript
-   ============================================================ */
+/* =============================================
+   KEGELS BLUMENHAUS – MAIN SCRIPT
+============================================= */
 
-'use strict';
+(() => {
+  'use strict';
 
-/* ── Mobile Navigation ──────────────────────────────────── */
-const navToggle   = document.getElementById('navToggle');
-const navLinks    = document.getElementById('navLinks');
-const header      = document.getElementById('header');
+  /* -----------------------------------------------
+     NAVIGATION – STICKY SCROLL EFFECT
+  ----------------------------------------------- */
+  const header = document.getElementById('site-header');
 
-function openNav() {
-  navLinks.classList.add('open');
-  navToggle.setAttribute('aria-expanded', 'true');
-  navToggle.setAttribute('aria-label', 'Menü schließen');
-}
-
-function closeNav() {
-  navLinks.classList.remove('open');
-  navToggle.setAttribute('aria-expanded', 'false');
-  navToggle.setAttribute('aria-label', 'Menü öffnen');
-}
-
-navToggle.addEventListener('click', () => {
-  const isOpen = navLinks.classList.contains('open');
-  isOpen ? closeNav() : openNav();
-});
-
-// Close nav when a link is clicked
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', closeNav);
-});
-
-// Close nav on outside click
-document.addEventListener('click', e => {
-  if (!header.contains(e.target)) {
-    closeNav();
+  function updateHeaderOnScroll() {
+    if (window.scrollY > 20) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
   }
-});
 
-// Close nav on Escape key
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeNav();
-});
+  window.addEventListener('scroll', updateHeaderOnScroll, { passive: true });
+  updateHeaderOnScroll();
 
-/* ── Header scroll behavior ─────────────────────────────── */
-function onScroll() {
-  const scrolled = window.scrollY > 20;
-  header.classList.toggle('scrolled', scrolled);
-  scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
-}
 
-window.addEventListener('scroll', onScroll, { passive: true });
+  /* -----------------------------------------------
+     MOBILE NAVIGATION TOGGLE
+  ----------------------------------------------- */
+  const navToggle = document.getElementById('navToggle');
+  const mainNav   = document.getElementById('mainNav');
 
-/* ── Highlight current open hours row ───────────────────── */
-function highlightTodayRow() {
-  const today = new Date().getDay(); // 0 = Sunday
-  const row   = document.querySelector(`.hours-row[data-day="${today}"]`);
-  if (row) {
-    row.classList.add('hours-row--today');
-    // Remove closed style on today's row so it doesn't appear grayed out
-    row.classList.remove('hours-row--closed');
+  function openNav() {
+    mainNav.classList.add('open');
+    navToggle.setAttribute('aria-expanded', 'true');
+    navToggle.setAttribute('aria-label', 'Navigation schließen');
+    document.body.style.overflow = 'hidden';
   }
-}
 
-highlightTodayRow();
+  function closeNav() {
+    mainNav.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Navigation öffnen');
+    document.body.style.overflow = '';
+  }
 
-/* ── Scroll-to-Top Button ────────────────────────────────── */
-const scrollTopBtn = document.getElementById('scrollTop');
-
-scrollTopBtn.addEventListener('click', e => {
-  e.preventDefault();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-// Trigger once to set initial state
-onScroll();
-
-/* ── Scroll Reveal (Intersection Observer) ──────────────── */
-const revealItems = document.querySelectorAll(
-  '.service-card, .occasion-card, .testimonial, .gallery-item, .why-card, .usp-item, .about-content, .about-visual'
-);
-
-function addRevealClasses() {
-  revealItems.forEach((el, i) => {
-    el.classList.add('reveal');
-    const delay = i % 4; // cycle 0-3
-    if (delay > 0) el.classList.add(`reveal-delay-${delay}`);
+  navToggle.addEventListener('click', () => {
+    const isOpen = mainNav.classList.contains('open');
+    isOpen ? closeNav() : openNav();
   });
-}
 
-function createRevealObserver() {
-  const observer = new IntersectionObserver(
-    entries => {
+  // Close nav when a link is clicked
+  mainNav.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', closeNav);
+  });
+
+  // Close nav on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && mainNav.classList.contains('open')) {
+      closeNav();
+      navToggle.focus();
+    }
+  });
+
+  // Close nav when clicking outside
+  document.addEventListener('click', e => {
+    if (mainNav.classList.contains('open') &&
+        !mainNav.contains(e.target) &&
+        !navToggle.contains(e.target)) {
+      closeNav();
+    }
+  });
+
+
+  /* -----------------------------------------------
+     SMOOTH SCROLLING FOR ANCHOR LINKS
+  ----------------------------------------------- */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', e => {
+      const target = document.querySelector(anchor.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+
+      const navH = parseInt(getComputedStyle(document.documentElement)
+        .getPropertyValue('--nav-h'), 10) || 72;
+      const top = target.getBoundingClientRect().top + window.scrollY - navH - 8;
+
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+
+  /* -----------------------------------------------
+     SCROLL ANIMATIONS (IntersectionObserver)
+  ----------------------------------------------- */
+  const fadeEls = document.querySelectorAll('.fade-in');
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
           observer.unobserve(entry.target);
         }
       });
-    },
-    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-  );
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-}
-
-if ('IntersectionObserver' in window) {
-  addRevealClasses();
-  createRevealObserver();
-} else {
-  // Fallback: show everything
-  revealItems.forEach(el => el.classList.add('visible'));
-}
-
-/* ── Smooth Scroll for Anchor Links ─────────────────────── */
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    const targetId = this.getAttribute('href');
-    if (targetId === '#') return;
-
-    const target = document.querySelector(targetId);
-    if (!target) return;
-
-    e.preventDefault();
-    const headerHeight = header.offsetHeight;
-    const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 12;
-
-    window.scrollTo({ top, behavior: 'smooth' });
-  });
-});
-
-/* ── Contact Form ────────────────────────────────────────── */
-const form        = document.getElementById('contactForm');
-const formSuccess = document.getElementById('formSuccess');
-
-form.addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
+    fadeEls.forEach(el => observer.observe(el));
+  } else {
+    // Fallback: show all immediately
+    fadeEls.forEach(el => el.classList.add('visible'));
   }
 
-  const submitBtn = form.querySelector('[type="submit"]');
-  const originalText = submitBtn.innerHTML;
 
-  // Loading state
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 0.8s linear infinite;">
-      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-    </svg>
-    Wird gesendet…
-  `;
+  /* -----------------------------------------------
+     BACK-TO-TOP BUTTON
+  ----------------------------------------------- */
+  const backToTop = document.getElementById('backToTop');
 
-  // Simulate sending (replace with actual form submission endpoint)
-  setTimeout(() => {
-    form.reset();
-    submitBtn.disabled  = false;
-    submitBtn.innerHTML = originalText;
-    formSuccess.hidden  = false;
-    formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-    // Hide success message after 8 seconds
-    setTimeout(() => {
-      formSuccess.hidden = true;
-    }, 8000);
-  }, 1200);
-});
-
-/* ── CSS: spinner animation for submit button ───────────── */
-const spinStyle = document.createElement('style');
-spinStyle.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
-document.head.appendChild(spinStyle);
-
-/* ── Active navigation link on scroll ───────────────────── */
-const sections  = document.querySelectorAll('section[id]');
-const navAnchors = document.querySelectorAll('.nav-link[href^="#"]');
-
-function updateActiveNav() {
-  const scrollPos = window.scrollY + header.offsetHeight + 60;
-
-  sections.forEach(section => {
-    const top    = section.offsetTop;
-    const bottom = top + section.offsetHeight;
-
-    if (scrollPos >= top && scrollPos < bottom) {
-      const id = section.getAttribute('id');
-      navAnchors.forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
-      });
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      backToTop.removeAttribute('hidden');
+    } else {
+      backToTop.setAttribute('hidden', '');
     }
+  }, { passive: true });
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-}
 
-window.addEventListener('scroll', updateActiveNav, { passive: true });
 
-/* Add active nav link style */
-const navStyle = document.createElement('style');
-navStyle.textContent = `.nav-link.active { color: var(--green-sage); font-weight: 600; }`;
-document.head.appendChild(navStyle);
+  /* -----------------------------------------------
+     OPENING HOURS – HIGHLIGHT TODAY & OPEN/CLOSED STATUS
+  ----------------------------------------------- */
+
+  // Opening schedule: day index (0=Sun) → { open, close } or null (closed)
+  const SCHEDULE = {
+    0: { open: 8 * 60,       close: 13 * 60 },       // Sun 08:00–13:00
+    1: { open: 8 * 60,       close: 18 * 60 },        // Mon 08:00–18:00
+    2: null,                                            // Tue closed
+    3: { open: 8 * 60,       close: 18 * 60 },        // Wed
+    4: { open: 8 * 60,       close: 18 * 60 },        // Thu
+    5: { open: 8 * 60,       close: 18 * 60 },        // Fri
+    6: { open: 8 * 60,       close: 15 * 60 },        // Sat 08:00–15:00
+  };
+
+  function initOpeningHours() {
+    const now         = new Date();
+    const dayIndex    = now.getDay(); // 0=Sun … 6=Sat
+    const minuteOfDay = now.getHours() * 60 + now.getMinutes();
+    const schedule    = SCHEDULE[dayIndex];
+    const isOpen      = schedule !== null &&
+                        minuteOfDay >= schedule.open &&
+                        minuteOfDay <  schedule.close;
+
+    // Highlight today's row in the hours table
+    const hoursRows = document.querySelectorAll('.hours-row');
+    hoursRows.forEach(row => {
+      if (parseInt(row.dataset.day, 10) === dayIndex) {
+        row.classList.add('hours-row--today');
+      }
+    });
+
+    // Show open/closed status badge
+    const statusEl = document.getElementById('openStatus');
+    if (statusEl) {
+      if (isOpen) {
+        const closeTime = minutesToTimeStr(schedule.close);
+        statusEl.textContent = `Jetzt geöffnet – heute bis ${closeTime} Uhr`;
+        statusEl.className = 'open-status open';
+      } else if (schedule !== null) {
+        const openTime = minutesToTimeStr(schedule.open);
+        statusEl.textContent = `Heute geschlossen – öffnet ${dayIndex === 2 ? 'nicht' : `um ${openTime} Uhr`}`;
+        statusEl.className = 'open-status closed';
+      } else {
+        statusEl.textContent = 'Heute geschlossen';
+        statusEl.className = 'open-status closed';
+      }
+    }
+  }
+
+  function minutesToTimeStr(mins) {
+    const h = Math.floor(mins / 60).toString().padStart(2, '0');
+    const m = (mins % 60).toString().padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
+  initOpeningHours();
+
+
+  /* -----------------------------------------------
+     CONTACT FORM – CLIENT-SIDE VALIDATION & SUBMISSION
+  ----------------------------------------------- */
+  const contactForm  = document.getElementById('contactForm');
+  const formSuccess  = document.getElementById('formSuccess');
+
+  if (contactForm) {
+    const fields = {
+      name:    { el: document.getElementById('c-name'),    errId: 'nameError',    msg: 'Bitte geben Sie Ihren Namen ein.' },
+      email:   { el: document.getElementById('c-email'),   errId: 'emailError',   msg: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.' },
+      message: { el: document.getElementById('c-message'), errId: 'messageError', msg: 'Bitte schreiben Sie Ihre Nachricht.' },
+    };
+
+    function validateEmail(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+
+    function showError(field, message) {
+      field.el.classList.add('error');
+      field.el.setAttribute('aria-invalid', 'true');
+      const errEl = document.getElementById(field.errId);
+      if (errEl) errEl.textContent = message;
+    }
+
+    function clearError(field) {
+      field.el.classList.remove('error');
+      field.el.removeAttribute('aria-invalid');
+      const errEl = document.getElementById(field.errId);
+      if (errEl) errEl.textContent = '';
+    }
+
+    // Live validation on blur
+    Object.values(fields).forEach(field => {
+      field.el.addEventListener('blur', () => {
+        const val = field.el.value.trim();
+        if (!val) {
+          showError(field, field.msg);
+        } else if (field === fields.email && !validateEmail(val)) {
+          showError(field, fields.email.msg);
+        } else {
+          clearError(field);
+        }
+      });
+
+      field.el.addEventListener('input', () => {
+        if (field.el.classList.contains('error')) {
+          clearError(field);
+        }
+      });
+    });
+
+    contactForm.addEventListener('submit', e => {
+      e.preventDefault();
+      let valid = true;
+
+      // Validate all required fields
+      if (!fields.name.el.value.trim()) {
+        showError(fields.name, fields.name.msg);
+        valid = false;
+      }
+
+      if (!fields.email.el.value.trim() || !validateEmail(fields.email.el.value.trim())) {
+        showError(fields.email, fields.email.msg);
+        valid = false;
+      }
+
+      if (!fields.message.el.value.trim()) {
+        showError(fields.message, fields.message.msg);
+        valid = false;
+      }
+
+      if (!valid) {
+        // Focus first error field
+        const firstError = contactForm.querySelector('.error');
+        if (firstError) firstError.focus();
+        return;
+      }
+
+      // Simulate submission (replace with actual fetch/API call)
+      const submitBtn = contactForm.querySelector('[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Wird gesendet …';
+
+      setTimeout(() => {
+        contactForm.reset();
+        Object.values(fields).forEach(f => clearError(f));
+        formSuccess.removeAttribute('hidden');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Nachricht senden <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 800);
+    });
+  }
+
+
+  /* -----------------------------------------------
+     ACTIVE NAV LINK BASED ON SCROLL POSITION
+  ----------------------------------------------- */
+  const sections = document.querySelectorAll('main section[id]');
+  const navLinks = document.querySelectorAll('.main-nav .nav-link:not(.nav-link--cta)');
+
+  function updateActiveNav() {
+    const navH  = parseInt(getComputedStyle(document.documentElement)
+                    .getPropertyValue('--nav-h'), 10) || 72;
+    const scrollY = window.scrollY + navH + 40;
+
+    let current = '';
+
+    sections.forEach(section => {
+      if (scrollY >= section.offsetTop) {
+        current = section.id;
+      }
+    });
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href').replace('#', '');
+      link.classList.toggle('active', href === current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
+
+})();
