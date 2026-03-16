@@ -2134,26 +2134,53 @@ a.contact-item:hover {
    Außerhalb des <header> – kein Stacking-Context-Problem
 ============================================= */
 
-.mobile-nav { display: none; }
+/* Desktop: beides ausblenden */
+.mobile-nav, .mobile-nav-backdrop { display: none; }
 
 @media (max-width: 899px) {
+
+  /* ── Backdrop: gedimmter Hintergrund hinter dem Panel ── */
+  .mobile-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    z-index: 9998;
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+
+  .mobile-nav-backdrop.visible {
+    background: rgba(0, 0, 0, 0.22);
+    pointer-events: auto;
+  }
+
+  /* ── Nav-Panel: kompaktes Dropdown von oben ── */
   .mobile-nav {
     display: flex;
     flex-direction: column;
     position: fixed;
-    inset: 0;
-    /* Apple-typisches Frosted-Glass: semi-transparent + Blur */
-    background: rgba(250, 248, 245, 0.88);
-    backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    z-index: 9999;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Kein full-height – nur so groß wie der Inhalt, max 78vh */
+    max-height: 78vh;
     overflow-y: auto;
-    transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Frosted Glass – Seite dahinter leicht sichtbar */
+    background: rgba(251, 249, 245, 0.92);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    /* Abgerundete Unterkante */
+    border-radius: 0 0 22px 22px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.14);
+    z-index: 9999;
+    /* Slide von oben herein */
+    transform: translateY(-105%);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .mobile-nav.open {
-    transform: translateX(0);
+    transform: translateY(0);
   }
 
   /* ── Kopfzeile ── */
@@ -2161,8 +2188,8 @@ a.contact-item:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 18px;
-    border-bottom: 1px solid rgba(0,0,0,0.07);
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     flex-shrink: 0;
   }
 
@@ -2174,11 +2201,11 @@ a.contact-item:hover {
   }
 
   .mobile-nav-brand .logo-flower {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     overflow: hidden;
-    border: 1.5px solid rgba(201, 136, 132, 0.35);
+    border: 1.5px solid rgba(201, 136, 132, 0.3);
     flex-shrink: 0;
   }
 
@@ -2191,7 +2218,7 @@ a.contact-item:hover {
 
   .mobile-nav-brand .logo-main {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: #1A1714;
     display: block;
@@ -2199,17 +2226,17 @@ a.contact-item:hover {
   }
 
   .mobile-nav-brand .logo-sub {
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     font-weight: 500;
-    color: #A09890;
+    color: #B0A49A;
     letter-spacing: 0.07em;
     text-transform: uppercase;
     display: block;
   }
 
   .mobile-nav-close {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.07);
     border: none;
@@ -2217,42 +2244,37 @@ a.contact-item:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #3D3830;
+    color: #4A4540;
     flex-shrink: 0;
-    transition: background 0.15s ease;
+    transition: background 0.12s ease;
   }
 
-  .mobile-nav-close svg { width: 18px; height: 18px; }
-
-  .mobile-nav-close:active {
-    background: rgba(0,0,0,0.13);
-  }
+  .mobile-nav-close svg { width: 16px; height: 16px; }
+  .mobile-nav-close:active { background: rgba(0,0,0,0.14); }
 
   /* ── Nav-Links: kompakt ── */
   .mobile-nav-list {
     list-style: none;
-    padding: 4px 0;
+    padding: 2px 0;
     margin: 0;
     flex-shrink: 0;
   }
 
   .mobile-nav-list li {
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.045);
   }
 
-  .mobile-nav-list li:last-child {
-    border-bottom: none;
-  }
+  .mobile-nav-list li:last-child { border-bottom: none; }
 
   .mobile-nav-link {
     display: flex;
     align-items: center;
-    padding: 15px 20px;
-    font-size: 1rem;
+    padding: 13px 18px;
+    font-size: 0.97rem;
     font-weight: 600;
     color: #1A1714;
     text-decoration: none;
-    transition: background 0.1s ease;
+    transition: background 0.1s ease, color 0.1s ease;
     letter-spacing: -0.01em;
   }
 
@@ -2260,16 +2282,17 @@ a.contact-item:hover {
     content: '';
     display: block;
     margin-left: auto;
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-top: 1.5px solid #C8A87A;
     border-right: 1.5px solid #C8A87A;
     transform: rotate(45deg);
     flex-shrink: 0;
+    opacity: 0.7;
   }
 
   .mobile-nav-link:active {
-    background: rgba(78, 124, 88, 0.08);
+    background: rgba(78, 124, 88, 0.07);
     color: #4E7C58;
   }
 
@@ -2279,16 +2302,16 @@ a.contact-item:hover {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin: 16px 16px 0;
-    padding: 14px 20px;
+    margin: 12px 14px 0;
+    padding: 13px 18px;
     background: #4E7C58;
     color: #FFFFFF;
-    border-radius: 12px;
-    font-size: 0.95rem;
+    border-radius: 11px;
+    font-size: 0.92rem;
     font-weight: 700;
     text-decoration: none;
-    transition: background 0.15s ease, transform 0.1s ease;
-    box-shadow: 0 3px 14px rgba(78, 124, 88, 0.28);
+    transition: background 0.12s ease, transform 0.1s ease;
+    box-shadow: 0 3px 12px rgba(78, 124, 88, 0.25);
     flex-shrink: 0;
   }
 
@@ -2300,20 +2323,19 @@ a.contact-item:hover {
 
   /* ── Fußzeile ── */
   .mobile-nav-footer {
-    margin-top: auto;
-    padding: 16px 20px 28px;
-    border-top: 1px solid rgba(0,0,0,0.06);
+    padding: 11px 18px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.055);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     flex-shrink: 0;
   }
 
   .mobile-nav-tel {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
+    gap: 7px;
+    font-size: 0.86rem;
     font-weight: 700;
     color: #4E7C58;
     text-decoration: none;
@@ -2324,8 +2346,8 @@ a.contact-item:hover {
   .mobile-nav-addr {
     display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 0.78rem;
-    color: #A09890;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #B0A49A;
   }
 }

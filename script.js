@@ -28,18 +28,21 @@
   const navToggle   = document.getElementById('navToggle');
   const mobileNav   = document.getElementById('mainNavMobile');
   const navClose    = document.getElementById('navClose');
+  const navBackdrop = document.getElementById('mobileNavBackdrop');
 
   function openNav() {
     mobileNav.classList.add('open');
     mobileNav.setAttribute('aria-hidden', 'false');
+    if (navBackdrop) navBackdrop.classList.add('visible');
     navToggle.setAttribute('aria-expanded', 'true');
     navToggle.setAttribute('aria-label', 'Navigation schließen');
-    document.body.style.overflow = 'hidden';
+    // Kein body-overflow-hidden – Seite soll sichtbar bleiben (Frosted-Glass-Effekt)
   }
 
   function closeNav() {
     mobileNav.classList.remove('open');
     mobileNav.setAttribute('aria-hidden', 'true');
+    if (navBackdrop) navBackdrop.classList.remove('visible');
     navToggle.setAttribute('aria-expanded', 'false');
     navToggle.setAttribute('aria-label', 'Navigation öffnen');
     document.body.style.overflow = '';
@@ -50,6 +53,7 @@
   });
 
   if (navClose) navClose.addEventListener('click', closeNav);
+  if (navBackdrop) navBackdrop.addEventListener('click', closeNav);
 
   // Close on nav-link click
   if (mobileNav) {
