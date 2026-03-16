@@ -107,6 +107,25 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 
 address { font-style: normal; }
 
+/* Skip link for keyboard/screen-reader navigation */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  background: var(--sage-600);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 0.375rem 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
 /* =============================================
    TYPOGRAPHY
 ============================================= */
