@@ -25,47 +25,44 @@
   /* -----------------------------------------------
      MOBILE NAVIGATION TOGGLE
   ----------------------------------------------- */
-  const navToggle = document.getElementById('navToggle');
-  const mainNav   = document.getElementById('mainNav');
+  const navToggle   = document.getElementById('navToggle');
+  const mobileNav   = document.getElementById('mainNavMobile');
+  const navClose    = document.getElementById('navClose');
 
   function openNav() {
-    mainNav.classList.add('open');
+    mobileNav.classList.add('open');
+    mobileNav.setAttribute('aria-hidden', 'false');
     navToggle.setAttribute('aria-expanded', 'true');
     navToggle.setAttribute('aria-label', 'Navigation schließen');
     document.body.style.overflow = 'hidden';
   }
 
   function closeNav() {
-    mainNav.classList.remove('open');
+    mobileNav.classList.remove('open');
+    mobileNav.setAttribute('aria-hidden', 'true');
     navToggle.setAttribute('aria-expanded', 'false');
     navToggle.setAttribute('aria-label', 'Navigation öffnen');
     document.body.style.overflow = '';
   }
 
-  navToggle.addEventListener('click', () => {
-    const isOpen = mainNav.classList.contains('open');
-    isOpen ? closeNav() : openNav();
+  if (navToggle) navToggle.addEventListener('click', () => {
+    mobileNav.classList.contains('open') ? closeNav() : openNav();
   });
 
-  // Close nav when a link is clicked
-  mainNav.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', closeNav);
-  });
+  if (navClose) navClose.addEventListener('click', closeNav);
 
-  // Close nav on Escape
+  // Close on nav-link click
+  if (mobileNav) {
+    mobileNav.querySelectorAll('.mobile-nav-link, .mobile-nav-cta, .mobile-nav-brand').forEach(el => {
+      el.addEventListener('click', closeNav);
+    });
+  }
+
+  // Escape key
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && mainNav.classList.contains('open')) {
+    if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('open')) {
       closeNav();
-      navToggle.focus();
-    }
-  });
-
-  // Close nav when clicking outside
-  document.addEventListener('click', e => {
-    if (mainNav.classList.contains('open') &&
-        !mainNav.contains(e.target) &&
-        !navToggle.contains(e.target)) {
-      closeNav();
+      if (navToggle) navToggle.focus();
     }
   });
 
@@ -292,7 +289,7 @@
      ACTIVE NAV LINK BASED ON SCROLL POSITION
   ----------------------------------------------- */
   const sections = document.querySelectorAll('main section[id]');
-  const navLinks = document.querySelectorAll('.main-nav .nav-link:not(.nav-link--cta)');
+  const navLinks = document.querySelectorAll('.main-nav .nav-link:not(.nav-link--cta), .mobile-nav-link');
 
   function updateActiveNav() {
     const navH  = parseInt(getComputedStyle(document.documentElement)
