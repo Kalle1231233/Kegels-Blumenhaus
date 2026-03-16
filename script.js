@@ -316,4 +316,21 @@
   window.addEventListener('scroll', updateActiveNav, { passive: true });
   updateActiveNav();
 
+
+  /* -----------------------------------------------
+     MAPS LINKS – Apple Maps auf iOS, Google Maps sonst
+  ----------------------------------------------- */
+  const MAPS_QUERY = 'Hauptstraße+15a,+16548+Glienicke+Nordbahn';
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  const mapsUrl = isIOS
+    ? `maps://maps.apple.com/?q=${MAPS_QUERY}`
+    : `https://maps.google.com/?q=${encodeURIComponent('Hauptstraße 15a, 16548 Glienicke Nordbahn')}`;
+
+  ['heroBadgeMaps', 'aboutBadgeMaps'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.href = mapsUrl;
+  });
+
 })();
